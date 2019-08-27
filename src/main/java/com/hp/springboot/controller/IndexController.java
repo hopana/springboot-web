@@ -2,9 +2,9 @@ package com.hp.springboot.controller;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 
 /**
  * index请求处理
@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @author hupan
  * @since 2018-03-28 15:49
  */
-@RestController
+@Controller
 @RequestMapping("/index")
 public class IndexController {
     private static final Logger LOGGER = LoggerFactory.getLogger(IndexController.class);

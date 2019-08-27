@@ -5,6 +5,9 @@
     <title>错误页面</title>
 </head>
 <body>
-    <p th:text="'出错了，错误信息'+${errorMsg}"></p>
+    <p>出错了！</p>
+    <p th:text="'请求路径：'+ ${path}"></p>
+    <p th:text="'错误代码：'+ ${errorCode}"></p>
+    <p th:text="'错误信息：'+ ${errorMsg}"></p>
 </body>
 </html>

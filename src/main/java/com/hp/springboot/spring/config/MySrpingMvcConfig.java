@@ -16,7 +16,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 @Configuration
@@ -61,7 +61,7 @@ public class MySrpingMvcConfig implements WebMvcConfigurer {
     // 自定义消息转化器的第二种方法
     @Override
     public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
-        StringHttpMessageConverter converter = new StringHttpMessageConverter(Charset.forName("UTF-8"));
+        StringHttpMessageConverter converter = new StringHttpMessageConverter(StandardCharsets.UTF_8);
         converters.add(converter);
     }
 

@@ -1,5 +1,7 @@
 package com.hp.springboot.exception;
 
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.web.ErrorProperties;
 import org.springframework.boot.autoconfigure.web.servlet.error.AbstractErrorController;
 import org.springframework.boot.autoconfigure.web.servlet.error.ErrorViewResolver;
@@ -22,6 +24,10 @@ import java.util.Map;
 @Controller
 @RequestMapping("${server.error.path:${error.path:/error}}")
 public class RestErrorController extends AbstractErrorController {
+
+    @Autowired
+    private ErrorAttributes errorAttributes;
+
     private final ErrorProperties errorProperties;
 
     public RestErrorController(ErrorAttributes errorAttributes, ErrorProperties errorProperties) {
@@ -45,7 +51,27 @@ public class RestErrorController extends AbstractErrorController {
         Map<String, Object> model = Collections.unmodifiableMap(this.getErrorAttributes(request, this.isIncludeStackTrace(request, MediaType.TEXT_HTML)));
         response.setStatus(status.value());
         ModelAndView modelAndView = this.resolveErrorView(request, response, status, model);
-        return modelAndView == null ? new ModelAndView("error", model) : modelAndView;
+        if (modelAndView == null) {
+            modelAndView = new ModelAndView("error", model);
+        }
+
+        Map<String, Object> errorAttributes = getErrorAttributes(request, isIncludeStackTrace(request, MediaType.APPLICATION_JSON));
+        //Integer status=(Integer)errorAttributes.get("status");
+        String path = (String) errorAttributes.get("path");
+        String errorMsg = (String) errorAttributes.get("message");
+
+        if(isIncludeStackTrace(request, MediaType.APPLICATION_JSON)) {
+            String trace = (String) errorAttributes.get("trace");
+            if(!StringUtils.isEmpty(trace)) {
+                errorMsg += String.format(" and trace %s", trace);
+            }
+        }
+
+        modelAndView.addObject("path", path);
+        modelAndView.addObject("errorCode", status);
+        modelAndView.addObject("errorMsg", errorMsg);
+
+        return modelAndView;
     }
 
     /**
@@ -80,4 +106,5 @@ public class RestErrorController extends AbstractErrorController {
     private ErrorProperties getErrorProperties() {
         return this.errorProperties;
     }
+
 }
